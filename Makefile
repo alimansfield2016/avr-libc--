@@ -26,19 +26,16 @@ OBJ += ${SRC:${SRCDIR}/%.${SRCEXT}=${OBJDIR}/%.${OBJEXT}}
 OBJ += ${CSRC:${SRCDIR}/%.${CSRCEXT}=${OBJDIR}/%.${OBJEXT}}
 OBJ += ${ASM:${SRCDIR}/%.${ASMEXT}=${OBJDIR}/%.${OBJEXT}}
 
-OBJ += /usr/lib/avr/lib/avr5/crtatmega644p.o
-
-
 WARNINGS += all pedantic extra shadow no-overflow no-volatile
 STANDARD = c++20
 OPTIMISATION = 2
 DEFINES += __AVR_ATmega644P__ F_CPU=12000000 #ENABLE_INTERRUPTS
 LIBRARIES += atmega644p c c++ 
-WHOLE_LIBRARIES += usb++
+WHOLE_LIBRARIES += 
 
-INCLUDEPATH += ${PRJDIR}/avrlibc++/hdr/ /usr/lib/avr/include/ ${PRJDIR}/libusb++/hdr/
+INCLUDEPATH += ${PRJDIR}/avr-libc++/hdr/ /usr/lib/avr/include/ ${PRJDIR}/libusb++/hdr/
 INC = ${INCLUDEPATH:%=-I%}
-LIBDIR += . /usr/local/avr/lib/avr5/ ${PRJDIR}/avrlibc++/ ${PRJDIR}/libusb++/
+LIBDIR += . /usr/local/avr/lib/avr5/ ${PRJDIR}/avr-libc++/ ${PRJDIR}/libusb++/
 LIB = ${LIBDIR:%=-L%} ${LIBRARIES:%=-l%} -Wl,--whole-archive ${WHOLE_LIBRARIES:%=-l%} -Wl,--no-whole-archive
 
 CXX_COMPILE_FLAGS = -c -std=${STANDARD} ${WARNINGS:%=-W%} -O${OPTIMISATION} ${INC} ${DEFINES:%=-D%} -ggdb
@@ -101,7 +98,7 @@ upload: ${PROGRAM}.${HEXEXT}
 
 
 clean:
-	rm -rf ${ASMDIR}/* ${OBJDIR}/* ${PROGRAM}*
+	rm -rf ${ASMDIR}/* ${OBJ} ${PROGRAM}*
 
 size: ${PROGRAM}.${BINEXT}
 	avr-size $<

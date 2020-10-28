@@ -1,0 +1,165 @@
+#pragma once
+
+/*
+AVR C++ Standard Library
+Written by Alex Mansfield
+Copyright 2020
+
+C Standard Library Header
+
+The <cstdlib> header includes:
+- Types
+	- div_t
+	- ldiv_t
+	- lldiv_t
+	- size_t
+- Macro constants
+	- EXIT_SUCCESS
+	- EXIT_FAILURE
+	- MB_CUR_MAX
+	- RAND_MAX
+- Functions
+	- Process control
+		- abort
+		- exit
+		- quick_exit
+		- _Exit
+		- atexit
+		- at_quick_exit
+		- system
+		- getenv
+	- Memory Management
+		- malloc
+		- aligned_alloc
+		- calloc
+		- realloc
+		- free
+	- Numeric string conversion
+		- atof
+		- atoi
+		- atol
+		- atoll
+		- strtol
+		- strtoll
+		- strtoul
+		- strtoull
+		- strtof
+		- strtod
+		- strtold
+	- Wide string manipulation
+		- mblen
+		- mbtowc
+		- wctomb
+		- mbstowcs
+		- wcstombs
+	- Miscellaneous algorithms and math
+		- rand
+		- srand
+		- qsort
+		- bsearch
+		- abs
+		- labs
+		- llabs
+		- div
+		- ldiv
+		- lldiv
+
+
+
+*/
+
+#include <stddef.h>
+
+// Types
+namespace std
+{
+	typedef unsigned short size_t; 
+	using div_t = unsigned short;
+	using ldiv_t = unsigned short;
+	using lldiv_t = unsigned short;
+
+} // namespace std
+
+// Macro constants
+#define NULL 0
+#define EXIT_FAILURE -1
+#define EXIT_SUCCESS 0
+#define RAND_MAX 0xFFFF
+#define MB_CUR_MAX 2
+
+// Process control
+namespace std
+{
+	extern "C" using c_atexit_handler = void();
+	extern "C++" using atexit_handler = void();
+	extern "C" using c_compare_pred = int(const void*, const void*);
+	extern "C++" using compare_pred = int(const void*, const void*);
+	
+	[[noreturn]] void abort() noexcept;
+	int atexit(c_atexit_handler* func) noexcept;
+	int atexit(atexit_handler* func) noexcept;
+	int at_quick_exit(c_atexit_handler* func) noexcept;
+	int at_quick_exit(atexit_handler* func) noexcept;
+	[[noreturn]] void exit(int status);
+	[[noreturn]] void _Exit(int status) noexcept;
+	[[noreturn]] void quick_exit(int status) noexcept;
+
+	char* getenv(const char* name);
+	int system(const char* string);
+
+	// C library memory allocation
+	void* aligned_alloc(size_t alignment, size_t size);
+	void* calloc(size_t nmemb, size_t size);
+	void free(void* ptr);
+	void* malloc(size_t size);
+	void* realloc(void* ptr, size_t size);
+
+	double atof(const char* nptr);
+	int atoi(const char* nptr);
+	long int atol(const char* nptr);
+	long long int atoll(const char* nptr);
+	double strtod(const char* nptr, char** endptr);
+	float strtof(const char* nptr, char** endptr);
+	long double strtold(const char* nptr, char** endptr);
+	long int strtol(const char* nptr, char** endptr, int base);
+	long long int strtoll(const char* nptr, char** endptr, int base);
+	unsigned long int strtoul(const char* nptr, char** endptr, int base);
+	unsigned long long int strtoull(const char* nptr, char** endptr, int base);
+
+	// multibyte / wide string and character conversion functions
+	int mblen(const char* s, size_t n);
+	int mbtowc(wchar_t* pwc, const char* s, size_t n);
+	int wctomb(char* s, wchar_t wchar);
+	size_t mbstowcs(wchar_t* pwcs, const char* s, size_t n);
+	size_t wchtombs(char* s, const wchar_t* pwcs, size_t n);
+
+	// C standard library algorithms
+	void* bsearch(const void* key, const void* base, size_t nmemb, size_t size, c_compare_pred compare);
+	void* bsearch(const void* key, const void* base, size_t nmemb, size_t size, compare_pred compare);
+	void* qsort(const void* key, size_t nmemb, size_t size, c_compare_pred compare);
+	void* qsort(const void* key, size_t nmemb, size_t size, compare_pred compare);
+
+	// low-quality random number generation
+	int rand();
+	void srand(unsigned int seed);
+
+	// absolute values
+	int abs(int j);
+	long int abs(long int j);
+	long long int abs(long long int j);
+	float abs(float j);
+	double abs(double j);
+	long double abs(long double j);
+
+	long int labs(long int j);
+	long long int llabs(long long int j);
+
+	div_t div(int numer, int denom);
+	ldiv_t div(long int numer, long int denom);
+	lldiv_t div(long long int numer, long long int denom);
+	ldiv_t ldiv(long int numer, long int denom);
+	lldiv_t lldiv(long long int numer, long long int denom);
+
+} // namespace std
+	
+

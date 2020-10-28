@@ -1,0 +1,28 @@
+#pragma once
+
+/*
+
+AVR C++ Standard Library
+Written by Alex Mansfield
+Copyright 2020
+
+Memory Header
+
+The <memory> header includes:
+	- Smart pointers
+		- std::auto_ptr		c++98	deprecated c++17
+		- std::unique_ptr	c++11
+		- std::shared_ptr	c++11
+		- std::weak_ptr		c++11
+	- Allocators
+
+*/
+
+#include <bits/allocator.hpp>
+
+
+#if __cplusplus >= 201103L
+
+#	include <bits/unique_ptr.hpp>
+
+#endif

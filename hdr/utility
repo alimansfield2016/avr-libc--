@@ -1,0 +1,23 @@
+#pragma once
+
+/*
+
+AVR C++ Standard Library
+Written by Alex Mansfield
+Copyright 2020
+
+Utility Header
+
+The <utility> header includes:
+	- Forward
+*/
+
+#include <type_traits>
+
+namespace std
+{
+	template<typename T>
+		constexpr T&& forward(typename std::remove_reference<T>::type &t) noexcept
+		{ return static_cast<T&&>(t); }
+} // namespace std
+

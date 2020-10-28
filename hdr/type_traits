@@ -1,0 +1,28 @@
+#pragma once
+
+#include <bits/constant.hpp>
+
+namespace std {
+	template <class T> struct remove_cv { typedef T type; };
+	template <class T> struct remove_cv<const T> { typedef T type; };
+	template <class T> struct remove_cv<volatile T> { typedef T type; };
+	template <class T> struct remove_cv<const volatile T> { typedef T type; };
+
+	template <class T> struct remove_const { typedef T type; };
+	template <class T> struct remove_const<const T> { typedef T type; };
+
+	template <class T> struct remove_volatile { typedef T type; };
+	template <class T> struct remove_volatile<volatile T> { typedef T type; };
+
+	template<typename Alloc>
+	struct allocator_traits
+	{
+		typedef Alloc allocator_type;
+		typedef typename Alloc::value_type value_type;
+		// static constexpr 
+	};
+
+	template<class T> struct remove_reference { typedef T type; };
+	template<class T> struct remove_reference<T&> { typedef T type; };
+	template<class T> struct remove_reference<T&&> { typedef T type; };
+} // namespace std

@@ -1,0 +1,10 @@
+#pragma once
+
+#include <std/istream.hpp>
+
+namespace std
+{
+
+	static constexpr istream cin;
+
+} // namespace std

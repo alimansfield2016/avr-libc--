@@ -1,0 +1,67 @@
+#pragma once
+
+/*
+AVR C++ Standard Library
+Written by Alex Mansfield
+Copyright 2020
+
+Compare Header
+
+The <compare> header includes:
+- std::string_ordering
+	- less
+	- equivalent
+	- equal
+	- greater
+
+*/
+
+#if __cplusplus > 201703L
+
+#include <bits/strong_ordering.hpp>
+#include <bits/weak_ordering.hpp>
+#include <bits/partial_ordering.hpp>
+
+namespace std
+{
+	//comparison category types
+	class partial_ordering;
+	class weak_ordering;
+	class strong_ordering;
+
+	//named comparison functions
+	constexpr bool is_eq	(partial_ordering cmp) noexcept { return cmp == 0;}
+	constexpr bool is_neq	(partial_ordering cmp) noexcept { return cmp != 0;}
+	constexpr bool is_lt	(partial_ordering cmp) noexcept { return cmp <  0;}
+	constexpr bool is_lteq	(partial_ordering cmp) noexcept { return cmp <= 0;}
+	constexpr bool is_gt	(partial_ordering cmp) noexcept { return cmp >  0;}
+	constexpr bool is_gteq	(partial_ordering cmp) noexcept { return cmp >= 0;}
+
+/*
+
+	namespace detail {
+		template<unsigned int>
+		struct common_cmpcat_base     { using type = void; };
+		template<>
+		struct common_cmpcat_base<0u> { using type = std::strong_ordering; };
+		template<>
+		struct common_cmpcat_base<2u> { using type = std::partial_ordering; };
+		template<>
+		struct common_cmpcat_base<4u> { using type = std::weak_ordering; };
+		template<>
+		struct common_cmpcat_base<6u> { using type = std::partial_ordering; };
+	} // namespace detail
+	
+	template<class...Ts>
+	struct common_comparison_category :
+		detail::common_cmpcat_base<(0u | ... | 
+			(std::is_same_v<Ts, std::strong_ordering>  ? 0u :
+			std::is_same_v<Ts, std::weak_ordering>    ? 4u :
+			std::is_same_v<Ts, std::partial_ordering> ? 2u : 1u)
+		)> {};
+*/
+
+} // namespace std
+
+
+#endif

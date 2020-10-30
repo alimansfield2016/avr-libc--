@@ -27,11 +27,20 @@ The <avr/memory/pgmspace.hpp> header includes:
 
 namespace AVR
 {
-	template<typename T>
+	/**AVR::pgm_ptr
+	 * Pointer to data in ProgMem
+	 * Data types used MUST have a sizeof 1 OR 2 OR 4.
+	 * Any other sizes WILL NOT WORK
+	 * This is generally used for storage of trivial types 
+	 * such as numbers or buffers
+	 * 
+	 */
+	template<typename T> requires(sizeof(T) == 1 || sizeof(T) == 2 || sizeof(T) == 4)
 	class pgm_ptr 
 	{
 	public:
-		using pointer = const T*;
+		using type = const T;
+		using pointer = type*;
 
 	private:
 		pointer m_ptr;
@@ -48,28 +57,30 @@ namespace AVR
 		pgm_ptr &operator--() { m_ptr -= s_size; return *this; }
 		pgm_ptr operator--(int) { pointer cpy = m_ptr; m_ptr -= s_size; return pgm_ptr(cpy); }
 
-		[[nodiscard]] const T operator*() const { 
-			T t; 
-			for(uint8_t i = 0; i < s_size; i++)
-				static_cast<uint8_t*>(&t)[i] = pgm_read_byte(m_ptr+i); 
-			return t; 
-		}
-/* 
+		// [[nodiscard]] const T operator*() const { 
+		// 	T t; 
+		// 	uint8_t *buf = reinterpret_cast<uint8_t*>(&t);
+		// 	for(uint8_t i = 0; i < s_size; i++)
+		// 		buf[i] = pgm_read_byte(m_ptr+i); 
+		// 	return t; 
+		// }
+
 		[[nodiscard]] const T operator*() const requires(s_size==1) { 
 			T t; 
-			static_cast<uint8_t>(t) = pgm_read_byte(m_ptr); 
+			*reinterpret_cast<uint8_t*>(&t) = pgm_read_byte(m_ptr); 
 			return t; 
 		}
 		[[nodiscard]] const T operator*() const requires(s_size==2) { 
 			T t; 
-			static_cast<uint8_t>(t) = pgm_read_word(m_ptr); 
+			*reinterpret_cast<uint16_t*>(&t) = pgm_read_word(m_ptr); 
 			return t; 
 		}
 		[[nodiscard]] const T operator*() const requires(s_size==4) { 
 			T t; 
-			static_cast<uint8_t>(t) = pgm_read_dword(m_ptr); 
+			*reinterpret_cast<uint32_t*>(&t) = pgm_read_dword(m_ptr); 
 			return t; 
-		} */
+		} 
+
 		// [[nodiscard]] const T operator*() const requires(std::isEqual) { 
 		// 	T t; 
 		// 	static_cast<uint8_t>(t) = pgm_read_dword(m_ptr); 
@@ -77,7 +88,7 @@ namespace AVR
 		// }
 
 		[[nodiscard]] const T operator[](int i) const { 
-			return *pgm_ptr(m_ptr+s_size*i); 
+			return *pgm_ptr{m_ptr+s_size*i}; 
 		}
 
 		void assign(const T &copy) {}

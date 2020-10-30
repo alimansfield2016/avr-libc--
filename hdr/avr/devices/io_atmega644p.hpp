@@ -50,6 +50,21 @@ constexpr AVR::Register8 PCMSK1(0x6C);
 constexpr AVR::Register8 PCMSK2(0x6D);
 constexpr AVR::Register8 PCMSK3(0x73);
 
+constexpr AVR::BV ISC00{0};
+constexpr AVR::BV ISC01{1};
+constexpr AVR::BV ISC10{2};
+constexpr AVR::BV ISC11{3};
+constexpr AVR::BV ISC20{4};
+constexpr AVR::BV ISC21{5};
+
+constexpr AVR::BV INT0{0};
+constexpr AVR::BV INT1{1};
+constexpr AVR::BV INT2{2};
+
+constexpr AVR::BV INTF0{0};
+constexpr AVR::BV INTF1{1};
+constexpr AVR::BV INTF2{2};
+
 constexpr AVR::Register8 UCSR0A(0xC0);
 constexpr AVR::Register8 UCSR0B(0xC1);
 constexpr AVR::Register8 UCSR0C(0xC2);

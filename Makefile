@@ -17,10 +17,16 @@ HEXEXT = hex
 
 SRC += ${wildcard ${SRCDIR}/*.${SRCEXT}}
 SRC += ${wildcard ${SRCDIR}/**/*.${SRCEXT}}
+SRC += ${wildcard ${SRCDIR}/**/**/*.${SRCEXT}}
+SRC += ${wildcard ${SRCDIR}/**/**/**/*.${SRCEXT}}
 CSRC += ${wildcard ${SRCDIR}/*.${CSRCEXT}}
 CSRC += ${wildcard ${SRCDIR}/**/*.${CSRCEXT}}
+CSRC += ${wildcard ${SRCDIR}/**/**/*.${CSRCEXT}}
+CSRC += ${wildcard ${SRCDIR}/**/**/**/*.${CSRCEXT}}
 ASM += ${wildcard ${SRCDIR}/*.${ASMEXT}}
 ASM += ${wildcard ${SRCDIR}/**/*.${ASMEXT}}
+ASM += ${wildcard ${SRCDIR}/**/**/*.${ASMEXT}}
+ASM += ${wildcard ${SRCDIR}/**/**/**/*.${ASMEXT}}
 
 OBJ += ${SRC:${SRCDIR}/%.${SRCEXT}=${OBJDIR}/%.${OBJEXT}}
 OBJ += ${CSRC:${SRCDIR}/%.${CSRCEXT}=${OBJDIR}/%.${OBJEXT}}
@@ -30,7 +36,7 @@ WARNINGS += all pedantic extra shadow no-overflow no-volatile
 STANDARD = c++20
 OPTIMISATION = 2
 DEFINES += __AVR_ATmega644P__ F_CPU=12000000 #ENABLE_INTERRUPTS
-LIBRARIES += atmega644p c c++ 
+LIBRARIES += #atmega644p c c++ 
 WHOLE_LIBRARIES += 
 
 INCLUDEPATH += ${PRJDIR}/avr-libc++/hdr/ /usr/lib/avr/include/ ${PRJDIR}/libusb++/hdr/

@@ -16,36 +16,8 @@ The <utility> header includes:
 
 namespace std
 {
-
 	template<typename T>
 		constexpr T&& forward(typename std::remove_reference<T>::type &t) noexcept
 		{ return static_cast<T&&>(t); }
-
-	template<typename T>
-		constexpr T&& move(typename std::remove_reference<T>::type &t) noexcept
-		{ return static_cast<T&&>(t); }
-
-	template<typename T>
-		void swap(typename std::remove_reference<T>::type &a, typename std::remove_reference<T>::type &b)
-		{
-			T t = std::move(a);
-			a = std::move(b);
-			b = std::move(t);
-		}
-
-	template<class T1, class T2>
-	class pair
-	{
-	public:
-		T1 first;
-		T2 second;
-
-		using first_type = T1;
-		using second_type = T2;
-
-		constexpr pair(T1 t1, T2 t2) : first{t1}, second{t2} {}
-		constexpr pair(const pair &copy) : first{copy.first}, second{copy.second} {}
-	};
-
 } // namespace std
 

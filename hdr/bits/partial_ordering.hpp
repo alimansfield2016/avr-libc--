@@ -35,19 +35,19 @@ namespace std
 		static const partial_ordering unordered;
 
 		//comparisons
-		friend constexpr bool operator==(partial_ordering v, int u) noexcept { return v.value == int(eq::equivalent); }
+		friend constexpr bool operator==(partial_ordering v, int) noexcept { return v.value == int(eq::equivalent); }
 		friend constexpr bool operator==(partial_ordering v, partial_ordering w) noexcept = default;
-		friend constexpr bool operator< (partial_ordering v, int u) noexcept { return v.value == int(ord::less); };
-		friend constexpr bool operator> (partial_ordering v, int u) noexcept { return v.value == int(ord::greater); };
-		friend constexpr bool operator<=(partial_ordering v, int u) noexcept { return v.value != int(ord::greater); };
-		friend constexpr bool operator>=(partial_ordering v, int u) noexcept { return v.value != int(ord::less); };
-		friend constexpr bool operator< (int u, partial_ordering v) noexcept { return v.value != int(ord::less); };
-		friend constexpr bool operator> (int u, partial_ordering v) noexcept { return v.value != int(ord::greater); };
-		friend constexpr bool operator<=(int u, partial_ordering v) noexcept { return v.value == int(ord::greater); };
-		friend constexpr bool operator>=(int u, partial_ordering v) noexcept { return v.value == int(ord::less); };
+		friend constexpr bool operator< (partial_ordering v, int) noexcept { return v.value == int(ord::less); };
+		friend constexpr bool operator> (partial_ordering v, int) noexcept { return v.value == int(ord::greater); };
+		friend constexpr bool operator<=(partial_ordering v, int) noexcept { return v.value != int(ord::greater); };
+		friend constexpr bool operator>=(partial_ordering v, int) noexcept { return v.value != int(ord::less); };
+		friend constexpr bool operator< (int, partial_ordering v) noexcept { return v.value != int(ord::less); };
+		friend constexpr bool operator> (int, partial_ordering v) noexcept { return v.value != int(ord::greater); };
+		friend constexpr bool operator<=(int, partial_ordering v) noexcept { return v.value == int(ord::greater); };
+		friend constexpr bool operator>=(int, partial_ordering v) noexcept { return v.value == int(ord::less); };
 
-		friend constexpr partial_ordering operator<=>(partial_ordering v, int u) noexcept;
-		friend constexpr partial_ordering operator<=>(int u, partial_ordering v) noexcept;
+		friend constexpr partial_ordering operator<=>(partial_ordering v, int) noexcept;
+		friend constexpr partial_ordering operator<=>(int, partial_ordering v) noexcept;
 
 	};
 

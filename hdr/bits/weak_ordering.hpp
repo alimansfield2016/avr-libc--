@@ -31,19 +31,19 @@ namespace std
 		constexpr operator partial_ordering() const noexcept { return (value == int(ord::less)) ? partial_ordering::less : (value == int(ord::greater)) ? partial_ordering::greater : partial_ordering::equivalent; };
 
 		//comparisons
-		friend constexpr bool operator==(weak_ordering v, int u) noexcept { return v.value == int(eq::equivalent); }
+		friend constexpr bool operator==(weak_ordering v, int) noexcept { return v.value == int(eq::equivalent); }
 		friend constexpr bool operator==(weak_ordering v, weak_ordering w) noexcept { return v.value == w.value; }
-		friend constexpr bool operator< (weak_ordering v, int u) noexcept { return v.value == int(ord::less); };
-		friend constexpr bool operator> (weak_ordering v, int u) noexcept { return v.value == int(ord::greater); };
-		friend constexpr bool operator<=(weak_ordering v, int u) noexcept { return v.value != int(ord::greater); };
-		friend constexpr bool operator>=(weak_ordering v, int u) noexcept { return v.value != int(ord::less); };
-		friend constexpr bool operator< (int u, weak_ordering v) noexcept { return v.value != int(ord::less); };
-		friend constexpr bool operator> (int u, weak_ordering v) noexcept { return v.value != int(ord::greater); };
-		friend constexpr bool operator<=(int u, weak_ordering v) noexcept { return v.value == int(ord::greater); };
-		friend constexpr bool operator>=(int u, weak_ordering v) noexcept { return v.value == int(ord::less); };
+		friend constexpr bool operator< (weak_ordering v, int) noexcept { return v.value == int(ord::less); };
+		friend constexpr bool operator> (weak_ordering v, int) noexcept { return v.value == int(ord::greater); };
+		friend constexpr bool operator<=(weak_ordering v, int) noexcept { return v.value != int(ord::greater); };
+		friend constexpr bool operator>=(weak_ordering v, int) noexcept { return v.value != int(ord::less); };
+		friend constexpr bool operator< (int, weak_ordering v) noexcept { return v.value != int(ord::less); };
+		friend constexpr bool operator> (int, weak_ordering v) noexcept { return v.value != int(ord::greater); };
+		friend constexpr bool operator<=(int, weak_ordering v) noexcept { return v.value == int(ord::greater); };
+		friend constexpr bool operator>=(int, weak_ordering v) noexcept { return v.value == int(ord::less); };
 
-		friend constexpr weak_ordering operator<=>(weak_ordering v, int u) noexcept { return v; };
-		friend constexpr weak_ordering operator<=>(int u, weak_ordering v) noexcept { return v.value == int(ord::less) ? weak_ordering(ord::greater) : v.value == int(ord::greater) ? weak_ordering(ord::less) : v;  };
+		friend constexpr weak_ordering operator<=>(weak_ordering v, int) noexcept { return v; };
+		friend constexpr weak_ordering operator<=>(int, weak_ordering v) noexcept { return v.value == int(ord::less) ? weak_ordering(ord::greater) : v.value == int(ord::greater) ? weak_ordering(ord::less) : v;  };
 
 	};
 

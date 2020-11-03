@@ -131,7 +131,7 @@ namespace AVR
 			return *pgm_ptr{&m_ptr[i]}; 
 		}
 
-		void assign(const pointer ptr) { m_ptr = ptr; }
+		void assign(const T* ptr) { m_ptr = ptr; }
 		const T* ptr() const { return m_ptr; }
 
 

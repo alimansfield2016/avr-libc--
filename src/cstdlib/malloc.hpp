@@ -22,19 +22,19 @@ class freelist
 	class freelist_node
 	{
 		public:
-		std::size_t size;
+		std::size_t m_size;
 		freelist_node *next;
 		freelist_node *prev;
 
 		freelist_node *split(std::size_t size) 
 		{
-			if(size < (sizeof(this) - sizeof(this->size))) return nullptr;
-			if(this->size - size < sizeof(this)) return nullptr;
+			if(size < (sizeof(this) - sizeof(this->m_size))) return nullptr;
+			if(this->m_size - size < sizeof(this)) return nullptr;
 
-			freelist_node *other = this + sizeof(this->size) + size;
-			other->size = this->size - sizeof(other->size) - size;
+			freelist_node *other = this + sizeof(this->m_size) + size;
+			other->m_size = this->m_size - sizeof(other->m_size) - size;
 
-			this->size = size;
+			this->m_size = size;
 			other->next = this->next;
 			other->prev = this;
 			this->next = other;
@@ -49,11 +49,11 @@ class freelist
 			// actually that other is just after this
 
 			// if( other + other->size + sizeof(other->size) == this) return other->join(this);
-			if( this + this->size + sizeof(this->size) != other) return false;
+			if( this + this->m_size + sizeof(this->m_size) != other) return false;
 
 			this->next = other->next;
 			this->next->prev = this;
-			this->size += other->size + sizeof(other->size);
+			this->m_size += other->m_size + sizeof(other->m_size);
 			
 			return true;
 		}
@@ -69,7 +69,8 @@ class freelist
 	{
 		freelist_node *node;
 		public:
-		iterator(freelist_node *ptr = nullptr) : node(ptr) {}
+		constexpr iterator(freelist_node *ptr = nullptr) : node(ptr) {}
+		constexpr iterator(const iterator&) = default;
 
 		operator freelist_node*() const { return node; }
 
@@ -101,7 +102,7 @@ class freelist
 
 		//check if we could join to the tail element. 
 		//If we can, then we know we deallocated at the end of the heap and can retract it
-		if(&*elem + elem->size + sizeof(elem->size) == wilderness){
+		if(&*elem + elem->m_size + sizeof(elem->m_size) == wilderness){
 			it = wilderness;
 			wilderness = elem;
 
@@ -120,7 +121,7 @@ class freelist
 
 		elem->next = it;
 		//check not null while we're at it
-		if(elem->prev = it->prev){
+		if((elem->prev = it->prev)){
 			elem->prev->next = elem;
 			elem->prev->join(elem);
 		}
@@ -138,12 +139,12 @@ class freelist
 	{
 		iterator best(wilderness);
 		for(iterator it = begin(); it; ++it){
-			if(it->size == size){
+			if(it->m_size == size){
 				remove(it);
-				return &(*it) + sizeof(freelist_node::size);
+				return &(*it) + sizeof(freelist_node::m_size);
 			}
-			if(it->size >= best->size) continue;
-			if(it->size < (size + sizeof(freelist_node)) ) continue;
+			if(it->m_size >= best->m_size) continue;
+			if(it->m_size < (size + sizeof(freelist_node)) ) continue;
 
 			best = it;
 
@@ -154,12 +155,12 @@ class freelist
 		best->split(size);
 		remove(best);
 
-		return &(*best) + sizeof(freelist_node::size);
+		return &(*best) + sizeof(freelist_node::m_size);
 	}
 
 	void dealloc(void *ptr)
 	{
-		freelist_node *block = static_cast<freelist_node*>(ptr-sizeof(freelist_node::size));
+		freelist_node *block = reinterpret_cast<freelist_node*>(reinterpret_cast<char*>(ptr)-sizeof(freelist_node::m_size));
 		insert(block);
 	}
 

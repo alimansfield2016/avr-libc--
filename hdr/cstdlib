@@ -81,11 +81,21 @@ namespace std
 } // namespace std
 
 // Macro constants
+#ifndef NULL
 #define NULL 0
+#endif
+#ifndef EXIT_FAILURE
 #define EXIT_FAILURE -1
+#endif
+#ifndef EXIT_SUCCESS
 #define EXIT_SUCCESS 0
+#endif
+#ifndef RAND_MAX
 #define RAND_MAX 0xFFFF
+#endif
+#ifndef MB_CUR_MAX
 #define MB_CUR_MAX 2
+#endif
 
 // Process control
 namespace std

@@ -2,7 +2,6 @@
 
 #include <stdint.h>
 #include <initializer_list>
-#include <type_traits>
 
 namespace std
 {
@@ -52,7 +51,8 @@ namespace std
 	class constexpr_vector
 	{
 	public:
-		using value_type = std::remove_const<T>::type;
+		using value_type = T;
+		// using value_type = std::remove_const<T>::type;
 		using pointer = value_type*;
 		using const_pointer = const T*;
 		using iterator = pointer;

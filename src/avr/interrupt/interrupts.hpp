@@ -1,4 +1,4 @@
-/* #ifndef AVR_INTERRUPT_INTERRUPT_HPP
+#ifndef AVR_INTERRUPT_INTERRUPT_HPP
 #define AVR_INTERRUPT_INTERRUPT_HPP
 
 #include <avr/io/io.hpp>
@@ -141,4 +141,4 @@ namespace AVR
 
 } // namespace AVR
 
-#endif */
+#endif

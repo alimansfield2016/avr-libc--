@@ -17,13 +17,11 @@ namespace AVR
 
 	namespace Interrupt
 	{
-		// #ifdef ENABLE_INTERRUPTS
-		// extern ::std::array<::std::list<void (*)()>, _VECTORS_COUNT + 1> s_callbacks;
+		extern ::std::array<::std::list<void (*)()>, _VECTORS_COUNT + 1> s_callbacks;
 		
-		// [[maybe_unused]] void Interrupt(uint8_t int_id);
-		// bool registerHandler(void (*cb)(), uint8_t vector);
-		// bool unregisterHandler(void (*cb)(), uint8_t vector);
-		// #endif
+		[[maybe_unused]] void Interrupt(uint8_t int_id);
+		bool registerHandler(void (*cb)(), uint8_t vector);
+		bool unregisterHandler(void (*cb)(), uint8_t vector);
 
 
 		inline static void enable() { __asm__ __volatile__ ("sei" ::: "memory"); }

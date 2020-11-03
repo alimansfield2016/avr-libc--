@@ -2,6 +2,7 @@
 
 #include <stdint.h>
 #include <initializer_list>
+#include <type_traits>
 
 namespace std
 {
@@ -51,8 +52,8 @@ namespace std
 	class constexpr_vector
 	{
 	public:
-		using value_type = T;
-		// using value_type = std::remove_const<T>::type;
+		// using value_type = T;
+		using value_type = std::remove_const<T>::type;
 		using pointer = value_type*;
 		using const_pointer = const T*;
 		using iterator = pointer;
@@ -104,12 +105,9 @@ namespace std
 	template<class T>
 	class constexpr_vector_c<T, 0> : public constexpr_vector<T>
 	{
-		const bool b;
 	public:
 		constexpr constexpr_vector_c(const std::initializer_list<T> &init) : 
-			constexpr_vector<T>{nullptr, 0},
-			b{true} { }
-
+			constexpr_vector<T>{nullptr, 0}{}
 	};
 
 } // namespace std

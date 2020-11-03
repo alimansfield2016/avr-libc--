@@ -1,4 +1,4 @@
-/* #include <avr/interrupt/interrupt.hpp>
+#include <avr/interrupt/interrupt.hpp>
 
 #include "./interrupts.hpp"
 
@@ -8,7 +8,7 @@
 std::array<::std::list<void (*)()>, _VECTORS_COUNT + 1> AVR::Interrupt::s_callbacks;
 
 #define VEC_BODY(vec)	{	AVR::Interrupt::Interrupt(vec);	}
-// DEFINE_VECTORS(31)
+DEFINE_VECTORS(31)
 
 using namespace AVR;
 
@@ -42,4 +42,4 @@ bool Interrupt::unregisterHandler(void (*cb)(), uint8_t vector)
 			return true;
 		}
 	return false;
-} */
+}

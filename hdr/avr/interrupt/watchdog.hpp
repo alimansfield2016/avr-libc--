@@ -81,9 +81,9 @@ namespace AVR
 			reset();
 		}
 
-		inline static void enable()
+		inline static void enable(Mode mode = Mode::Reset)
 		{
-			setMode(Mode::Reset);
+			setMode(mode);
 		}
 		inline static void disable()
 		{

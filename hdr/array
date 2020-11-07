@@ -48,66 +48,25 @@ namespace std
 		constexpr const_reference operator[](size_type idx) const { return m_arr[idx]; }
 	};
 
-	template<class T>
-	class constexpr_vector
-	{
-	public:
-		// using value_type = T;
-		using value_type = std::remove_const<T>::type;
-		using pointer = value_type*;
-		using const_pointer = const T*;
-		using iterator = pointer;
-		using const_iterator = const T*;
-		using reference = value_type&;
-		using const_reference = const T&;
-		using size_type = size_t;
-	private:
-		pointer m_ptr;
-		const size_type m_size;
-
-	public:
-		constexpr constexpr_vector(pointer _ptr, size_type _size) : 
-			m_ptr{_ptr}, 
-			m_size{_size} {}
-
-		constexpr iterator begin() { return &m_ptr[0]; }
-		constexpr iterator end() { return &m_ptr[m_size]; }
-		constexpr const_iterator begin() const { return &m_ptr[0]; }
-		constexpr const_iterator end() const { return &m_ptr[m_size]; }
-
-		constexpr const_iterator cbegin() const { return &m_ptr[0]; }
-		constexpr const_iterator cend() const { return &m_ptr[m_size]; }
-
-		constexpr size_type size() const { return m_size; }
-
-		constexpr reference operator[](size_type idx) { return m_ptr[idx]; }
-		constexpr const_reference operator[](size_type idx) const { return m_ptr[idx]; }
-
-	};
-
-
-	template<class T, size_t S>
-	class constexpr_vector_c : public constexpr_vector<T>
-	{
-		T m_arr[S];
-
-	public:
-		constexpr constexpr_vector_c(const std::initializer_list<T> &init) : 
-			constexpr_vector<T>{m_arr, S}
-			{
-				auto it = init.begin();
-				for(uint8_t i = 0; i < S && it != init.end(); i++)
-					m_arr[i] = *it++;
-			}
-
-	};
-
-	template<class T>
-	class constexpr_vector_c<T, 0> : public constexpr_vector<T>
-	{
-	public:
-		constexpr constexpr_vector_c(const std::initializer_list<T> &) : 
-			constexpr_vector<T>{nullptr, 0}{}
-	};
-
 } // namespace std
+
+#include "bits/constexpr_vector.hpp"
+#include "bits/constexpr_vector_c.hpp"
+
+/*
+
+/home/ali/Projects/EmbeddedC++_v3/avr-libc++/hdr/bits/constexpr_vector.hpp:24:84: 
+	error: 
+		invalid conversion from 
+			‘const std::pair<unsigned char, const wchar_t*>* const*’ 
+			‘const std::pair<unsigned char, const wchar_t*>**'
+		to 
+			‘std::constexpr_vector<const std::pair<unsigned char, const wchar_t*>*>::pointer’ 
+			{aka ‘const std::pair<unsigned char, const wchar_t*>**’} 
+		[-fpermissive]
+   24 |   pointer ptr() const { return static_cast<const constexpr_vector_c<T, 1>*>(this)->m_arr; }
+      |                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~
+      |                                                                                    |
+      |              
+
+*/

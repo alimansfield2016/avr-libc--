@@ -129,6 +129,10 @@ namespace AVR
 			// get(p, buf, s_size);
 			return *reinterpret_cast<pointer>(&buf[0]);
 		}
+		constexpr const_pointer operator->() const
+		{
+			return ptr();
+		}
 
 		constexpr value_type operator[](int i) const { 
 			return *pgm_ptr{&m_ptr[i]}; 

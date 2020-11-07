@@ -42,6 +42,10 @@ constexpr AVR::Register8 EEARH(0x42);
 
 constexpr AVR::Register8 GTCCR(0x43);
 
+constexpr AVR::Register8 MCUCR{0x55};
+
+constexpr AVR::Register8 SPMCSR{0x57};
+
 
 constexpr AVR::Register8 PCICR(0x69);
 constexpr AVR::Register8 EICRA(0x69);

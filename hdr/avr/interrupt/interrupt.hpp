@@ -24,8 +24,21 @@ namespace AVR
 		bool unregisterHandler(void (*cb)(), uint8_t vector);
 
 
-		inline static void enable() { __asm__ __volatile__ ("sei" ::: "memory"); }
-		inline static void disable() { __asm__ __volatile__ ("cli" ::: "memory"); }
+		inline void enable() { __asm__ __volatile__ ("sei\n\tsbi 0x03, 0" ::: "memory"); }
+		inline void disable() { __asm__ __volatile__ ("cli\n\tsbi 0x03, 0" ::: "memory"); }
+
+		enum class Vector : bool {
+			Application = false,
+			BootLoader = true,
+		};
+
+		inline void setVectors(Vector vec)
+		{
+			uint8_t mask = 0;
+			if(vec == Vector::BootLoader) mask = 0x01;
+			MCUCR = 0x02;
+			MCUCR = mask;
+		}
 
 	}
 	namespace Interrupt

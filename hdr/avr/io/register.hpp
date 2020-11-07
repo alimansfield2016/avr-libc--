@@ -18,6 +18,8 @@ namespace AVR
 			constexpr T operator |= (T other) const { return reg() |= other; }
 			constexpr T operator &= (T other) const { return reg() &= other; }
 			constexpr T operator ^= (T other) const { return reg() ^= other; }
+			constexpr uintptr_t operator & () const { return m_addr; }
+			constexpr uintptr_t io_addr() const { return m_addr-0x20; }
 		protected:
 		private:
 		const uintptr_t m_addr;

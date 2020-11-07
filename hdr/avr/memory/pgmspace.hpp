@@ -22,7 +22,7 @@ The <avr/memory/pgmspace.hpp> header includes:
 #	include <avr/pgmspace.h>
 #endif
 
-
+#include <type_traits>
 
 
 namespace AVR
@@ -37,6 +37,18 @@ namespace AVR
 	 * HOWEVER, There is one key difference.
 	 * pgm_ptr is for a pointer ALREADY in PROGMEM
 	 */
+
+	class _pgm_ptr
+	{
+	protected:
+		_pgm_ptr() = default;
+		static void get(const uint8_t *ptr, uint8_t *buf, uint16_t size)
+		{
+			for(uint8_t i = 0; i < size; i++)
+				buf[i] = pgm_read_byte(ptr++);
+		}
+	};
+
 	template<typename T>
 	class pgm_anchor
 	{
@@ -44,43 +56,29 @@ namespace AVR
 		//so we should handle that too.
 
 	public:
-		using type = const T;
-		using pointer = type*;
+		using value_type = std::remove_const<T>::type;
+		using const_value_type = const value_type;
+		using pointer = value_type*;
+		using const_pointer = const value_type*;
 
 	private:
-		pointer p_ptr;
+		const_pointer m_ptr;
 		static constexpr short int s_size = sizeof(T);
 
 		//when using any member variables, we MUST dereference their address
-		pointer m_ptr() const { return *pgm_ptr(&p_ptr); }
 
 	public:
-		explicit constexpr pgm_anchor(pointer ptr) : p_ptr{ptr} {}
-		pgm_anchor(pgm_anchor&) = delete; //delete copy constructor
+		constexpr pgm_anchor(const T* ptr) : m_ptr{ptr} {}
+		pgm_anchor(pgm_anchor&) = default; //delete copy constructor
+		pointer ptr() const { return *pgm_ptr(&m_ptr); }
 
-		constexpr operator bool() const { return m_ptr(); }
-
-		// [[nodiscard]] const T operator*() const requires(s_size==1) { 
-		// 	T t; 
-		// 	*reinterpret_cast<uint8_t*>(&t) = pgm_read_byte(m_ptr()); 
-		// 	return t; 
-		// }
-		// [[nodiscard]] const T operator*() const requires(s_size==2) { 
-		// 	T t; 
-		// 	*reinterpret_cast<uint16_t*>(&t) = pgm_read_word(m_ptr()); 
-		// 	return t; 
-		// }
-		// [[nodiscard]] const T operator*() const requires(s_size==4) { 
-		// 	T t; 
-		// 	*reinterpret_cast<uint32_t*>(&t) = pgm_read_dword(m_ptr()); 
-		// 	return t; 
-		// } 
-
-
-		[[nodiscard]] const T operator[](int i) const { 
-			return *pgm_ptr{m_ptr()+s_size*i}; 
+		constexpr operator bool() const { return ptr(); }
+		[[nodiscard]] T operator*() const {
+			return *pgm_ptr{ptr()};
 		}
-		pointer ptr() const { return m_ptr(); }
+		[[nodiscard]] T operator[](int i) const { 
+			return *pgm_ptr{&(ptr()[i])}; 
+		}
 
 	};
 
@@ -93,46 +91,49 @@ namespace AVR
 	 * 
 	 */
 	template<typename T> //requires(sizeof(T) == 1 || sizeof(T) == 2 || sizeof(T) == 4)
-	class pgm_ptr 
+	class pgm_ptr : protected _pgm_ptr
 	{
 	public:
-		using value_type = T;
+		using value_type = std::remove_const<T>::type;
+		using const_value_type = const value_type;
 		using pointer = value_type*;
+		using const_pointer = const value_type*;
 
 	private:
-		const T* m_ptr;
+		const_pointer m_ptr;
 		static constexpr short int s_size = sizeof(T);
 
 	public:
-		explicit constexpr pgm_ptr(const T* ptr = nullptr) : m_ptr(ptr) {}
+		constexpr pgm_ptr(const T* ptr = nullptr) : m_ptr(ptr) {}
 		constexpr pgm_ptr(const pgm_ptr &copy) : m_ptr(copy.m_ptr) {}
-		constexpr pgm_ptr(const pgm_anchor<T> &copy) : m_ptr{copy.m_ptr()} {}
+		constexpr pgm_ptr(const pgm_anchor<value_type> &copy) : m_ptr{copy.ptr()} {}
+		constexpr const_pointer ptr() const { return m_ptr; }
+		void assign(const_pointer ptr) { m_ptr = ptr; }
 
 		constexpr pgm_ptr& operator=(const pgm_ptr &copy) { m_ptr = copy.m_ptr; return *this; }
 
 		constexpr operator bool() const { return m_ptr; }
 
 		constexpr pgm_ptr &operator++() { m_ptr += s_size; return *this; }
-		constexpr pgm_ptr operator++(int) { const T* cpy = m_ptr; m_ptr += s_size; return pgm_ptr(cpy); }
+		constexpr pgm_ptr operator++(int) { const_pointer cpy = m_ptr; m_ptr += s_size; return pgm_ptr(cpy); }
 		constexpr pgm_ptr &operator--() { m_ptr -= s_size; return *this; }
-		constexpr pgm_ptr operator--(int) { const T* cpy = m_ptr; m_ptr -= s_size; return pgm_ptr(cpy); }
+		constexpr pgm_ptr operator--(int) { const_pointer cpy = m_ptr; m_ptr -= s_size; return pgm_ptr(cpy); }
 
-		constexpr T operator*() const
+		constexpr value_type operator*() const
 		{
-			const uint8_t *ptr = reinterpret_cast<const uint8_t*>(m_ptr);
-			uint8_t b[s_size];
-			for(uint8_t i = 0; i < s_size; i++){
-				b[i] = pgm_read_byte(ptr++);
-			}
-			return *reinterpret_cast<T*>(&b[0]);
+			const uint8_t* p = reinterpret_cast<const uint8_t*>(ptr());
+			// const uint8_t* p = reinterpret_cast<const uint8_t*>(m_ptr);
+			uint8_t buf[s_size];
+			for(uint8_t i = 0; i < s_size; i++)
+				buf[i] = pgm_read_byte(p++);
+			// get(p, buf, s_size);
+			return *reinterpret_cast<pointer>(&buf[0]);
 		}
 
-		constexpr T operator[](int i) const { 
+		constexpr value_type operator[](int i) const { 
 			return *pgm_ptr{&m_ptr[i]}; 
 		}
 
-		void assign(const T* ptr) { m_ptr = ptr; }
-		const T* ptr() const { return m_ptr; }
 
 
 	};

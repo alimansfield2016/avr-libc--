@@ -106,7 +106,7 @@ namespace std
 	class constexpr_vector_c<T, 0> : public constexpr_vector<T>
 	{
 	public:
-		constexpr constexpr_vector_c(const std::initializer_list<T> &init) : 
+		constexpr constexpr_vector_c(const std::initializer_list<T> &) : 
 			constexpr_vector<T>{nullptr, 0}{}
 	};
 

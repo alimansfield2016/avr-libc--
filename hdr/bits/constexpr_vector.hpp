@@ -23,16 +23,18 @@ namespace std
 	private:
 		pointer m_ptr;
 		const size_type m_size;
-		constexpr pointer ptr() { return static_cast<constexpr_vector_c<value_type, 1>*>(this)->m_arr; }
-		constexpr const_pointer ptr() const { return static_cast<const constexpr_vector_c<value_type, 1>*>(this)->m_arr; }
-		// pointer ptr() { return m_ptr; }
-		// const_pointer ptr() const { return m_ptr; }
+		
 		
 
 	public:
 		constexpr constexpr_vector(pointer _ptr, size_type _size) : 
 			m_ptr{_ptr}, 
 			m_size{_size} {}
+			
+		// constexpr pointer ptr() { return static_cast<constexpr_vector_c<value_type, 1>*>(this)->m_arr; }
+		// constexpr const_pointer ptr() const { return static_cast<const constexpr_vector_c<value_type, 1>*>(this)->m_arr; }
+		constexpr pointer ptr() { return m_ptr; }
+		constexpr const_pointer ptr() const { return m_ptr; }
 
 		constexpr iterator begin() { return ptr(); }
 		constexpr iterator end() { return &ptr()[m_size]; }

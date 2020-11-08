@@ -21,20 +21,21 @@ namespace std
 		using const_reference = const T&;
 		using size_type = size_t;
 	private:
-		pointer m_ptr;
 		const size_type m_size;
 		
 		
 
 	public:
-		constexpr constexpr_vector(pointer _ptr, size_type _size) : 
-			m_ptr{_ptr}, 
+		constexpr constexpr_vector(size_type _size) : 
 			m_size{_size} {}
+
+		constexpr_vector(constexpr_vector&) = delete;
+		constexpr_vector(const constexpr_vector&) = delete;
+		constexpr_vector(constexpr_vector&&) = delete;
+		constexpr_vector(const constexpr_vector&&) = delete;
 			
-		// constexpr pointer ptr() { return static_cast<constexpr_vector_c<value_type, 1>*>(this)->m_arr; }
-		// constexpr const_pointer ptr() const { return static_cast<const constexpr_vector_c<value_type, 1>*>(this)->m_arr; }
-		constexpr pointer ptr() { return m_ptr; }
-		constexpr const_pointer ptr() const { return m_ptr; }
+		constexpr pointer ptr() { return static_cast<constexpr_vector_c<value_type, 1>*>(this)->m_arr; }
+		constexpr const_pointer ptr() const { return static_cast<const constexpr_vector_c<value_type, 1>*>(this)->m_arr; }
 
 		constexpr iterator begin() { return ptr(); }
 		constexpr iterator end() { return &ptr()[m_size]; }
@@ -45,6 +46,7 @@ namespace std
 		constexpr const_iterator cend() const { return ptr(); }
 
 		constexpr size_type size() const { return m_size; }
+		constexpr const size_type* size_p() const { return &m_size; }
 
 		constexpr reference operator[](size_type idx) { return ptr()[idx]; }
 		constexpr const_reference operator[](size_type idx) const { return ptr()[idx]; }

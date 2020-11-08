@@ -18,7 +18,7 @@ namespace std
 
 	public:
 		constexpr constexpr_vector_c(const std::initializer_list<T> &init) : 
-			constexpr_vector<T>{m_arr, S}
+			constexpr_vector<T>{S}
 			{
 				auto it = init.begin();
 				for(uint8_t i = 0; i < S && it != init.end(); i++)
@@ -32,7 +32,7 @@ namespace std
 	{
 	public:
 		constexpr constexpr_vector_c(const std::initializer_list<T> &) : 
-			constexpr_vector<T>{nullptr, 0}{}
+			constexpr_vector<T>{0}{}
 	};
 
 } // namespace std
